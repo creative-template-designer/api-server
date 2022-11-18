@@ -1,0 +1,8 @@
+{
+  "name": "layer-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/creative-template-designer/api-server.git",
+  "author": "Hitesh Goel <hiteshgoel426@gmail.com>",
+  "license": "MIT"
+}
