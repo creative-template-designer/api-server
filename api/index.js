@@ -19,7 +19,7 @@ const createTcpPool = require("./connect-tcp.js");
 const createUnixSocketPool = require("./connect-unix.js");
 
 const app = express();
-app.set("view engine", "pug");
+// app.set("view engine", "pug");
 app.enable("trust proxy");
 
 // Automatically parse request body as form data.
@@ -28,10 +28,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 // Set Content-Type for all responses for these routes.
-app.use((req, res, next) => {
-  res.set("Content-Type", "text/html");
-  next();
-});
+// app.use((req, res, next) => {
+//   res.set("Content-Type", "text/html");
+//   next();
+// });
 
 // Create a Winston logger that streams to Stackdriver Logging.
 const winston = require("winston");
@@ -99,6 +99,7 @@ const createPool = async () => {
     return createTcpPool(config);
   } else if (process.env.INSTANCE_UNIX_SOCKET) {
     // Use a Unix socket when INSTANCE_UNIX_SOCKET (e.g., /cloudsql/proj:region:instance) is defined.
+    console.log("process.env.INSTANCE_UNIX_SOCKET",process.env.INSTANCE_UNIX_SOCKET);
     return createUnixSocketPool(config);
   } else {
     throw "Set either the `INSTANCE_HOST` or `INSTANCE_UNIX_SOCKET` environment variable.";
