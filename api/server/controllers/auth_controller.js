@@ -5,13 +5,15 @@ const {
   deleteUser,
   verifyUser,
   createUser,
-  verifyUserName
+  verifyUserName,
 } = require("../models/auth");
 const {
   createError,
   BAD_REQUEST,
   UNAUTHORIZED,
+  GENERIC_ERROR,
 } = require("../helpers/error_helper");
+var _ = require("lodash");
 
 const postLogin = (req, res, next) => {
   const username = String(req.body.username);
@@ -71,21 +73,29 @@ const postRegister = (req, res, next) => {
 const postLoginViaGoogle = async (req, res, next) => {
   const props = req.body.user;
 
-  console.log("google");
-  console.log(req);
   if (props) {
     const foundUser = await getUserData(props);
+    console.log(foundUser);
 
-    if (foundUser) {
+    if (typeof foundUser === "object") {
       res.json({ userData: foundUser });
     } else {
-      await createGoogleFacbook(props)
+      const updatedProps = {
+        ...props,
+        logintype: "Google",
+      };
+      return await createGoogleFacbook(updatedProps)
         .then(async (data) => {
           console.log(data);
           const value = await getUserData(props);
           res.json({ userData: value }).status(200);
         })
-        .catch((err) => res.send(err));
+        .catch((err) =>
+          createError({
+            status: GENERIC_ERROR,
+            message: `Error occured ${err}`,
+          })
+        );
     }
   } else {
     next(
@@ -98,7 +108,7 @@ const postLoginViaGoogle = async (req, res, next) => {
 };
 
 const getUserData = async (props) =>
-  await verifyUser(`"username" = '${props?.username}'`);
+  await verifyUserName(`username='${props?.username}'`);
 
 const postdeleteUser = async (req, res, next) => {
   const props = req.body;

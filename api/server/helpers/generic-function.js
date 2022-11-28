@@ -1,5 +1,5 @@
 const { createPool } = require("../../index");
-
+var _ = require("lodash");
 const create = async (tableName, props, username) => {
   const owner = username || "admin";
 
@@ -7,7 +7,7 @@ const create = async (tableName, props, username) => {
     return `${keys}`;
   }).join(", ")}`;
 
-  const keyWithDate = `${keys}, "modifiedby", "createdby"`;
+  const keyWithDate = `${keys}, modifiedby, createdby`;
 
   const values = `${_.map(props, (v, key) => {
     return `'${v}'`;
@@ -17,16 +17,24 @@ const create = async (tableName, props, username) => {
   const query = `INSERT INTO ${tableName}(${keyWithDate}) VALUES (${valueWithDate})`;
 
   console.log("qery in create", query);
-  const client = await createPool();
-  return await client
-    .query(query)
-    .then((res) => {
+  // const client = await createPool();
+  let conn = null;
+  return await createPool()
+    .then(async (pool) => {
+      console.log("pool>>>>>>", pool);
+      conn = pool;
+      const res = await pool?.query(query);
       console.log("find res", res);
       return res?.rows;
     })
     .catch((err) => {
       console.log("find error", err);
       return err.stack;
+    })
+    .finally(() => {
+      if (conn) {
+        conn.end();
+      }
     });
 };
 
@@ -35,20 +43,27 @@ const findAll = async (tableName, selectableProps, filters = "") =>
 
 const find = async (tableName, selectableProps, filters = "") => {
   const colummns =
-    selectableProps?.length > 0 ? `"${selectableProps.join('", "')}"` : "*";
+    selectableProps?.length > 0 ? `"${selectableProps?.join('", "')}"` : "*";
   const query = `select ${colummns} from ${tableName} ${
     filters && filters?.length > 0 ? `where ${filters}` : ""
   }`;
-  const client = await createPool();
-  return await client
-    .query(query)
-    .then((res) => {
-      console.log("find res", res?.rows);
-      return res?.rows;
+  let conn = null;
+  return await createPool()
+    .then(async (pool) => {
+      conn = pool;
+      console.log(query);
+      const value = await pool.query(query);
+      console.log("find res", value);
+      return value;
     })
     .catch((err) => {
       console.log("find error", err);
       return err.stack;
+    })
+    .finally(() => {
+      if (conn) {
+        conn.end();
+      }
     });
 };
 

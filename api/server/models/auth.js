@@ -28,12 +28,17 @@ const verifyUserName = async (props) => {
   //   selectablePropsGoogleFacebook,
   //   props
   // );
+  console.log(props);
+  return findOne("users", [], props);
 };
 const createUser = (props) => {
   //   beforeSave(props).then((user) => guts.create(user));
 };
 
-const createGoogleFacbook = (props) => create("users", props);
+const createGoogleFacbook = (props) => {
+  console.log(props);
+  return create("users", props);
+};
 
 const verifyUser = (username, password) => {
   //   const matchErrorMsg = "Username or password do not match";
@@ -57,6 +62,10 @@ const verifyUser = (username, password) => {
 
 const deleteUser = (props) => guts.destroy("users", props);
 
-module.exports = () => {
-  createGoogleFacbook, deleteUser, verifyUser, createUser,verifyUserName
+module.exports = {
+  createGoogleFacbook,
+  deleteUser,
+  verifyUser,
+  createUser,
+  verifyUserName,
 };
