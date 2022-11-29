@@ -11,7 +11,7 @@ env:
   PROJECT_ID: ${{ secrets.GCR_PROJECT }}
   RUN_REGION: asia-southeast1
   SERVICE_NAME: website-api
-  INSTANCE_CONNECTION_NAME: uplifted-air-366017:asia-south2:layers-dev
+  INSTANCE_CONNECTION_NAME: uplifted-air-366017:asia-south2:layers
 
 jobs:
   build:
