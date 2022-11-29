@@ -107,6 +107,42 @@ const postLoginViaGoogle = async (req, res, next) => {
   }
 };
 
+const postLoginViaFacebook = async (req, res, next) => {
+  const props = req.body.user;
+
+  if (props) {
+    const foundUser = await getUserData(props);
+    if (typeof foundUser === "object") {
+      res.json({ userData: foundUser });
+    } else {
+      const updatedProps = {
+        ...props,
+        logintype: "Facebook",
+      };
+      return await createGoogleFacbook(updatedProps)
+        .then(async (data) => {
+          console.log(data);
+          const value = await getUserData(props);
+          res.json({ userData: value }).status(200);
+        })
+        .catch((err) =>
+          createError({
+            status: GENERIC_ERROR,
+            message: `Error occured ${err}`,
+          })
+        );
+    }
+  } else {
+    next(
+      createError({
+        status: BAD_REQUEST,
+        message: "Body is empty",
+      })
+    );
+  }
+};
+
+
 const getUserData = async (props) =>
   await verifyUserName(`username='${props?.username}'`);
 
@@ -125,4 +161,5 @@ module.exports = {
   postRegister,
   postLoginViaGoogle,
   postdeleteUser,
+  postLoginViaFacebook
 };

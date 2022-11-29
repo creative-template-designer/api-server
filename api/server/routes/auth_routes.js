@@ -11,8 +11,8 @@ const {
 
 router.route("/login").post(postLogin);
 router.route("/loginviagoogle").post(postLoginViaGoogle);
+router.route("/loginviafacebook").post(postLoginViaFacebook);
 router.route("/logindeleteuser").post(postdeleteUser);
-
 router.route("/register").post(postRegister);
 
 module.exports = router;
