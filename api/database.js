@@ -20,15 +20,6 @@ console.log(config);
 
 let connection = mysql.createConnection(config);
 
-// Database Connection for Development
-
-// let connection = mysql.createConnection({
-//   host: process.env.DB_HOST,
-//   user: process.env.DB_USER,
-//   database: process.env.DB_DATABASE,
-//   password: process.env.DB_PASS
-// });
-
 connection.connect(function (err) {
   if (err) {
     console.error("Error connecting: " + err.stack);

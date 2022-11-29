@@ -23,7 +23,6 @@ const createUnixSocketPool = async config => {
   // secure - consider a more secure solution such as
   // Cloud Secret Manager (https://cloud.google.com/secret-manager) to help
   // keep secrets safe.
-  console.log(process.env, "createUnixSocketPool");
   return mysql.createPool({
     user: process.env.SQL_USER, // e.g. 'my-db-user'
     password: process.env.SQL_PASSWORD, // e.g. 'my-db-password'
