@@ -13,6 +13,17 @@ const SALT_ROUNDS = 10;
 const hashPassword = (password) => bcrypt.hash(password, SALT_ROUNDS);
 const verifyPassword = (password, hash) => bcrypt.compare(password, hash);
 
+const usertable = [
+  "guid",
+  "username",
+  "email",
+  "password",
+  "firstname",
+  "lastname",
+  "fullname",
+  "logintype",
+];
+
 const beforeSave = (user) => {
   if (!user.password) return Promise.resolve(user);
 
@@ -23,13 +34,7 @@ const beforeSave = (user) => {
 };
 
 const verifyUserName = async (props) => {
-  // return await googleGuts.findOne(
-  //   "users",
-  //   selectablePropsGoogleFacebook,
-  //   props
-  // );
-  console.log(props);
-  return findOne("users", [], props);
+  return findOne("users", usertable, props);
 };
 const createUser = (props) => {
   //   beforeSave(props).then((user) => guts.create(user));
